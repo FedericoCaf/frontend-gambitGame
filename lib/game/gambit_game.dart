@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +9,7 @@ import 'hero_component.dart';
 class GambitGame extends FlameGame with PanDetector {
   late HeroComponent hero;
   late OrcComponent orc;
+  late Sprite background;
 
   @override
   Color backgroundColor() => AppColors.beigeLight;
@@ -17,6 +19,8 @@ class GambitGame extends FlameGame with PanDetector {
 
     //Fake Loading
     await Future.delayed(const Duration(seconds: 3));
+
+    background = await loadSprite('background.jpg');
 
     // Sprite is now not required (default sprite: viking)
     hero = HeroComponent(
@@ -36,6 +40,37 @@ class GambitGame extends FlameGame with PanDetector {
   @override
   void onPanUpdate(DragUpdateInfo info) {
     hero.move(info.delta.global);
+  }
+
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    
+    // Dimensione del canvas
+    final gameSize = size;  
+    
+    // Dimensioni dell'immagine di sfondo
+    final bgSize = background.srcSize;
+    
+    // Calcola il fattore di scala per coprire l'intero canvas
+    final scaleX = gameSize.x / bgSize.x;
+    final scaleY = gameSize.y / bgSize.y;
+    
+    // Usa il fattore di scala maggiore per evitare spazi vuoti
+    final scale = scaleX > scaleY ? scaleX : scaleY;
+    
+    // Calcola la nuova dimensione dell'immagine di sfondo
+    final sizeToRender = Vector2(bgSize.x * scale, bgSize.y * scale);
+
+    // Calcola la posizione per centrare l'immagine di sfondo
+    final positionX = (gameSize.x - sizeToRender.x) / 2 + 70; // Spostamento di 70 pixel a destra
+    final positionY = (gameSize.y - sizeToRender.y) / 2;
+    
+    background.render(
+      canvas,
+      size: sizeToRender,
+      position: Vector2(positionX, positionY),
+    );
   }
 
 }

@@ -12,13 +12,14 @@ void main() {
       loadingBuilder: (BuildContext ctx) {
         return const Gameinitloadingscreen();
       },
-      backgroundBuilder: (BuildContext ctx) {
+        // Il backgroundBuilder puo` essere usato se serve un'immagine di sfondo fissa
+      /*backgroundBuilder: (BuildContext ctx) {
         return Image.asset(
           'assets/images/background.jpg',
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
         );
-      },
+      },*/
   ));
 }

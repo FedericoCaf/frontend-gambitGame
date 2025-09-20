@@ -15,6 +15,9 @@ class GambitGame extends FlameGame with PanDetector {
   @override
   Future<void> onLoad() async {
 
+    //Fake Loading
+    await Future.delayed(const Duration(seconds: 3));
+
     // Sprite is now not required (default sprite: viking)
     hero = HeroComponent(
       size: Vector2.all(128),

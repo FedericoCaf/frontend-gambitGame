@@ -14,18 +14,16 @@ class GambitGame extends FlameGame with PanDetector {
 
   @override
   Future<void> onLoad() async {
-    final sprite = await loadSprite('viking.png');
+
+    // Sprite is now not required (default sprite: viking)
     hero = HeroComponent(
-      sprite: sprite,
       size: Vector2.all(128),
     );
 
     add(hero);
 
-    // Sprite nemico (orco)
-    final orcSprite = await loadSprite('orc.png');
+    // Sprite is now not required (default enemy sprite: orc)
     orc = OrcComponent(
-      sprite: orcSprite,
       size: Vector2.all(128),
       position: size / 2 + Vector2(200, 0),
     );

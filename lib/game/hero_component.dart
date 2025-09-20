@@ -3,8 +3,9 @@ import 'package:flame/events.dart';
 import 'package:frontend/game/gambit_game.dart';
 
 class HeroComponent extends SpriteComponent with DragCallbacks, HasGameReference<GambitGame> {
+
   HeroComponent({
-    required Sprite super.sprite,
+    Sprite? super.sprite,
     super.position,
     Vector2? size,
   }) : super(
@@ -14,7 +15,7 @@ class HeroComponent extends SpriteComponent with DragCallbacks, HasGameReference
 
   @override
   Future<void> onLoad() async {
-    await super.onLoad();
+    sprite = sprite ?? await Sprite.load('viking.png');
     position = game.size / 2;
   }
 

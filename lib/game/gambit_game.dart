@@ -44,8 +44,6 @@ class GambitGame extends FlameGame with PanDetector {
 
   @override
   void render(Canvas canvas) {
-    super.render(canvas);
-    
     // Dimensione del canvas
     final gameSize = size;  
     
@@ -71,6 +69,9 @@ class GambitGame extends FlameGame with PanDetector {
       size: sizeToRender,
       position: Vector2(positionX, positionY),
     );
+
+
+    super.render(canvas);
   }
 
 }

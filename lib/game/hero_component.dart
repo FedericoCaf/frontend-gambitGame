@@ -2,7 +2,8 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:frontend/game/gambit_game.dart';
 
-class HeroComponent extends SpriteComponent with DragCallbacks, HasGameReference<GambitGame> {
+class HeroComponent extends SpriteComponent
+    with DragCallbacks, HasGameReference<GambitGame>{
 
   HeroComponent({
     Sprite? super.sprite,

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend/game/orc_component.dart';
@@ -15,12 +18,13 @@ class GambitGame extends FlameGame with PanDetector {
   Color backgroundColor() => AppColors.beigeLight;
 
   @override
+  bool pauseWhenBackgrounded = true;
+
+  @override
   Future<void> onLoad() async {
 
     //Fake Loading
     await Future.delayed(const Duration(seconds: 3));
-    
-    overlays.add('PauseMenu');
 
     background = await loadSprite('background.jpg');
 
@@ -76,6 +80,36 @@ class GambitGame extends FlameGame with PanDetector {
     super.render(canvas);
   }
 
+  @override
+  void onRemove() {
+    removeAll(children);
+    processLifecycleEvents();
+    Flame.images.clearCache();
+    Flame.assets.clearCache();
+  }
+
+  void onDirectionPressed(String direction) {
+    const step = 10.0;
+    Vector2 delta;
+
+    switch (direction) {
+      case 'up':
+        delta = Vector2(0, -step);
+        break;
+      case 'down':
+        delta = Vector2(0, step);
+        break;
+      case 'left':
+        delta = Vector2(-step, 0);
+        break;
+      case 'right':
+        delta = Vector2(step, 0);
+        break;
+      default:
+        delta = Vector2.zero();
+    }
+    hero.move(delta);
+  }
 }
 
 

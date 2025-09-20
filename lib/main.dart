@@ -2,12 +2,14 @@ import 'dart:ffi';
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/game/GameBaseControls.dart';
 import 'package:frontend/game/GameInitLoadingScreen.dart';
 import 'package:frontend/game/gambit_game.dart';
 
 void main() {
   runApp(GameWidget(
     game: GambitGame(),
+    initialActiveOverlays: const ['PauseMenu', 'Controls'],
     loadingBuilder: (BuildContext ctx) {
       return const Gameinitloadingscreen();
     },
@@ -25,15 +27,9 @@ void main() {
           )
         );
       },
-    },
-    // Il backgroundBuilder puo` essere usato se serve un'immagine di sfondo fissa
-    /*backgroundBuilder: (BuildContext ctx) {
-        return Image.asset(
-          'assets/images/background.jpg',
-          fit: BoxFit.cover,
-          width: double.infinity,
-          height: double.infinity,
-        );
-      },*/
+      'Controls': (context, game) => Gamebasecontrols
+        (onDirectionPressed: (dir) => (game as GambitGame).onDirectionPressed(dir)),
+    }
   ));
 }
+

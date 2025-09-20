@@ -19,6 +19,8 @@ class GambitGame extends FlameGame with PanDetector {
 
     //Fake Loading
     await Future.delayed(const Duration(seconds: 3));
+    
+    overlays.add('PauseMenu');
 
     background = await loadSprite('background.jpg');
 

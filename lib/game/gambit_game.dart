@@ -89,7 +89,7 @@ class GambitGame extends FlameGame with PanDetector {
   }
 
   void onDirectionPressed(String direction) {
-    const step = 10.0;
+    const step = 7.0;
     Vector2 delta;
 
     switch (direction) {

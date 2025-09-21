@@ -1,37 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class Gamebasecontrols extends StatelessWidget {
+class Gamebasecontrols extends StatefulWidget {
 
   final void Function(String direction) onDirectionPressed;
 
   const Gamebasecontrols({super.key, required this.onDirectionPressed});
 
   @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildButton(Icons.arrow_upward, 'up'),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-             _buildButton(Icons.arrow_back, 'left'),
-              const SizedBox(width: 20),
-             _buildButton(Icons.arrow_forward, 'right')
-            ],
-          ),
-          _buildButton(Icons.arrow_downward, 'down'),
-        ],
-      )
-    );
+  State<Gamebasecontrols> createState() => _GamebasecontrolsState();
+
+}
+
+class _GamebasecontrolsState extends State<Gamebasecontrols> {
+
+  Timer? _timer;
+
+  void _startMoving(String direction) {
+    widget.onDirectionPressed(direction);
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+      widget.onDirectionPressed(direction);
+    });
+  }
+
+  void _stopMoving() {
+    _timer?.cancel();
+    _timer = null;
   }
 
   Widget _buildButton(IconData icon, String direction) {
     return GestureDetector(
-      onTapUp: (_) => onDirectionPressed(direction),
-      onLongPress: () => onDirectionPressed(direction),
+      onTapDown: (_) => _startMoving(direction),
+      onTapUp: (_) => _stopMoving(),
+      onTapCancel: _stopMoving,
       child: Container(
         width: 60,
         height: 60,
@@ -44,5 +46,31 @@ class Gamebasecontrols extends StatelessWidget {
     );
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: Alignment.bottomCenter,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildButton(Icons.arrow_upward, 'up'),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildButton(Icons.arrow_back, 'left'),
+                const SizedBox(width: 20),
+                _buildButton(Icons.arrow_forward, 'right')
+              ],
+            ),
+            _buildButton(Icons.arrow_downward, 'down'),
+          ],
+        )
+    );
+  }
 
+  @override
+  void dispose() {
+    _stopMoving();
+    super.dispose();
+  }
 }

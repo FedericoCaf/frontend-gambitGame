@@ -13,62 +13,34 @@ class Gamebasecontrols extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTapUp: (_) => onDirectionPressed('up'),
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_upward, color: Colors.white),
-            ),
-          ),
+          _buildButton(Icons.arrow_upward, 'up'),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              GestureDetector(
-                onTapUp: (_) => onDirectionPressed('left'),
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.arrow_back, color: Colors.white),
-                ),
-              ),
+             _buildButton(Icons.arrow_back, 'left'),
               const SizedBox(width: 20),
-              GestureDetector(
-                onTapUp: (_) => onDirectionPressed('right'),
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.5),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.arrow_forward, color: Colors.white),
-                ),
-              ),
+             _buildButton(Icons.arrow_forward, 'right')
             ],
           ),
-          GestureDetector(
-            onTapUp: (_) => onDirectionPressed('down'),
-            child: Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_downward, color: Colors.white),
-            ),
-          ),
+          _buildButton(Icons.arrow_downward, 'down'),
         ],
       )
+    );
+  }
+
+  Widget _buildButton(IconData icon, String direction) {
+    return GestureDetector(
+      onTapUp: (_) => onDirectionPressed(direction),
+      onLongPress: () => onDirectionPressed(direction),
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.5),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white),
+      ),
     );
   }
 

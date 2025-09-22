@@ -15,7 +15,7 @@ class GambitGame extends FlameGame with PanDetector {
   late OrcComponent orc;
   late Sprite background;
 
-  GambitGame({required MyWorld world}) : super(world: world);
+  GambitGame({required MyWorld super.world, super.camera});
 
   @override
   Color backgroundColor() => AppColors.beigeLight;

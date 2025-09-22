@@ -6,6 +6,7 @@ import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend/game/orc_component.dart';
+import 'package:frontend/main.dart';
 import 'package:frontend/utils/colors.dart';
 import 'hero_component.dart';
 
@@ -13,6 +14,8 @@ class GambitGame extends FlameGame with PanDetector {
   late HeroComponent hero;
   late OrcComponent orc;
   late Sprite background;
+
+  GambitGame({required MyWorld world}) : super(world: world);
 
   @override
   Color backgroundColor() => AppColors.beigeLight;

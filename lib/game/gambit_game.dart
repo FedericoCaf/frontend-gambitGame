@@ -10,7 +10,7 @@ import 'package:frontend/main.dart';
 import 'package:frontend/utils/colors.dart';
 import 'hero_component.dart';
 
-class GambitGame extends FlameGame with PanDetector {
+class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
   late HeroComponent hero;
   late OrcComponent orc;
   late Sprite background;
@@ -29,6 +29,10 @@ class GambitGame extends FlameGame with PanDetector {
     //Fake Loading
     await Future.delayed(const Duration(seconds: 3));
 
+    final screenHitbox = ScreenHitbox();
+    screenHitbox.debugMode = true;
+    add(screenHitbox);
+
     background = await loadSprite('background.jpg');
 
     // Sprite is now not required (default sprite: viking)
@@ -41,7 +45,7 @@ class GambitGame extends FlameGame with PanDetector {
     // Sprite is now not required (default enemy sprite: orc)
     orc = OrcComponent(
       size: Vector2.all(128),
-      position: size / 2 + Vector2(200, 0),
+      position: Vector2(350, 450),
     );
     add(orc);
   }

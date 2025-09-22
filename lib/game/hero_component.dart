@@ -1,9 +1,12 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:frontend/game/gambit_game.dart';
 
 class HeroComponent extends SpriteComponent
-    with DragCallbacks, HasGameReference<GambitGame>{
+    with DragCallbacks, CollisionCallbacks, HasGameReference<GambitGame>{
+
+  Vector2? _previousPosition;
 
   HeroComponent({
     Sprite? super.sprite,
@@ -18,6 +21,9 @@ class HeroComponent extends SpriteComponent
   Future<void> onLoad() async {
     sprite = sprite ?? await Sprite.load('viking.png');
     position = game.size / 2;
+    add(
+      RectangleHitbox()..debugMode = true,
+    );
   }
 
   @override
@@ -36,7 +42,22 @@ class HeroComponent extends SpriteComponent
   }
 
   void move(Vector2 delta) {
+    _previousPosition = position.clone();
     position.add(delta);
   }
 
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+
+    // Gestisci la collisione (ad esempio, fermare il movimento)
+    // Qui puoi aggiungere logica per cosa succede quando collide con un altro oggetto
+    if (_previousPosition != null) {
+      position.setFrom(_previousPosition!);
+    }
+    super.onCollision(intersectionPoints, other);
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+  }
 }

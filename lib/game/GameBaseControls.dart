@@ -3,25 +3,26 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class Gamebasecontrols extends StatefulWidget {
-
   final void Function(String direction) onDirectionPressed;
 
   const Gamebasecontrols({super.key, required this.onDirectionPressed});
 
   @override
   State<Gamebasecontrols> createState() => _GamebasecontrolsState();
-
 }
 
 class _GamebasecontrolsState extends State<Gamebasecontrols> {
-
   Timer? _timer;
 
   void _startMoving(String direction) {
-    widget.onDirectionPressed(direction);
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+    if (direction == 'up') {
       widget.onDirectionPressed(direction);
-    });
+    } else {
+      widget.onDirectionPressed(direction);
+      _timer = Timer.periodic(const Duration(milliseconds: 100), (_) {
+        widget.onDirectionPressed(direction);
+      });
+    }
   }
 
   void _stopMoving() {
@@ -64,8 +65,7 @@ class _GamebasecontrolsState extends State<Gamebasecontrols> {
             ),
             _buildButton(Icons.arrow_downward, 'down'),
           ],
-        )
-    );
+        ));
   }
 
   @override

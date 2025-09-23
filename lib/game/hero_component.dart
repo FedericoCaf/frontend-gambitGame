@@ -60,4 +60,41 @@ class HeroComponent extends SpriteComponent
   @override
   void onCollisionEnd(PositionComponent other) {
   }
+
+  // ================== Gravity Simulation ==================
+
+  double velocityY = 0.0; // Velocità verticale
+  final double gravity = 500.0; // Forza di gravità
+  double jump = -300.0; // Forza del salto
+  int ground = 425; // Livello del terreno
+  bool isOnGround = false; // Stato di contatto con il terreno
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+
+    // Calcolo l'accelerazione gravitazionale
+    velocityY += gravity * dt;
+
+    // Aggiorno la posizione
+    y = y + (velocityY * dt);
+
+    // Gestisco la collisione con il terreno
+    if (y + height > ground) {
+      y = ground - height;
+      velocityY = 0;
+      isOnGround = true;
+    } else {
+      isOnGround = false;
+    }
+
+  }
+
+  void jumpAction() {
+    if (isOnGround) {
+      velocityY = jump as double;
+      isOnGround = false;
+    }
+  }
+
 }

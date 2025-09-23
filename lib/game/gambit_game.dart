@@ -102,20 +102,24 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     switch (direction) {
       case 'up':
         delta = Vector2(0, -step);
+        hero.jumpAction();
         break;
       case 'down':
         delta = Vector2(0, step);
+        hero.move(delta);
         break;
       case 'left':
         delta = Vector2(-step, 0);
+        hero.move(delta);
         break;
       case 'right':
         delta = Vector2(step, 0);
+        hero.move(delta);
         break;
       default:
         delta = Vector2.zero();
+        hero.move(delta);
     }
-    hero.move(delta);
   }
 }
 

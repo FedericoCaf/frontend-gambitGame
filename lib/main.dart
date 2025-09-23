@@ -7,6 +7,9 @@ import 'package:frontend/game/GameBaseControls.dart';
 import 'package:frontend/game/GameInitLoadingScreen.dart';
 import 'package:frontend/game/gambit_game.dart';
 
+import 'package:logger/logger.dart';
+
+var logger = Logger();
 
 class MyWorld extends World {
   @override
@@ -18,6 +21,12 @@ class MyWorld extends World {
 }
 
 void main() {
+
+  //Inizializzazione Logger
+  logger.i("Esempio di messaggio informativo");
+  logger.w("Esempio di messaggio di avviso");
+  logger.e("Esempio di messaggio di errore");
+
   runApp(GameWidget(
     game: GambitGame(
       world: MyWorld(),

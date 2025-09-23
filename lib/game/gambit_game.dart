@@ -45,7 +45,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     // Sprite is now not required (default enemy sprite: orc)
     orc = OrcComponent(
       size: Vector2.all(128),
-      position: Vector2(350, 450),
+      position: Vector2(650, 300),
     );
     add(orc);
   }
@@ -58,7 +58,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
   @override
   void render(Canvas canvas) {
     // Dimensione del canvas
-    final gameSize = size;  
+    final gameSize = size;
     
     // Dimensioni dell'immagine di sfondo
     final bgSize = background.srcSize;
@@ -74,7 +74,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     final sizeToRender = Vector2(bgSize.x * scale, bgSize.y * scale);
 
     // Calcola la posizione per centrare l'immagine di sfondo
-    final positionX = (gameSize.x - sizeToRender.x) / 2 + 70; // Spostamento di 70 pixel a destra
+    final positionX = (gameSize.x - sizeToRender.x) / 2;
     final positionY = (gameSize.y - sizeToRender.y) / 2;
     
     background.render(

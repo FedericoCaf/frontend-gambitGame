@@ -29,15 +29,15 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     //Fake Loading
     await Future.delayed(const Duration(seconds: 3));
 
-    final screenHitbox = ScreenHitbox();
-    screenHitbox.debugMode = true;
-    add(screenHitbox);
+    // final screenHitbox = ScreenHitbox();
+    // screenHitbox.debugMode = true;
+    // add(screenHitbox);
 
     background = await loadSprite('background.jpg');
 
     // Sprite is now not required (default sprite: viking)
     hero = HeroComponent(
-      size: Vector2.all(128),
+      size: Vector2(96 * 3,84 * 3),
     );
 
     add(hero);
@@ -48,6 +48,9 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
       position: Vector2(650, 300),
     );
     add(orc);
+    
+    // Camera settings
+    camera.follow(hero, maxSpeed: 250);
   }
 
   @override

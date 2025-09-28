@@ -50,7 +50,7 @@ class _GamebasecontrolsState extends State<Gamebasecontrols> {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: Alignment.bottomCenter,
+        alignment: Alignment.bottomLeft,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

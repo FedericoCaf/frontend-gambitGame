@@ -20,12 +20,27 @@ class HeroComponent extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     
-    animation = await game.loadSpriteAnimation(path, data)
+    animation = await game.loadSpriteAnimation(
+    'hero_idle.png',
+    SpriteAnimationData.sequenced(
+        amount: 7,
+        stepTime: 0.2,
+        textureSize: Vector2(96, 84),
+      loop: true,
+    ));
     
     position = game.size / 2;
-    add(
-      RectangleHitbox()..debugMode = true,
-    );
+
+    // Aggiungo un hitbox per le collisioni
+    final hitbox = RectangleHitbox.relative(
+        Vector2(0.5, 0.5),
+        parentSize: size,
+        position: Vector2(size.x * 0.25, size.y * 0.25));
+
+    hitbox.debugMode = true; // Abilita la modalità di debug per vedere l'hitbox
+
+    add(hitbox);
+
   }
 
   @override
@@ -68,7 +83,7 @@ class HeroComponent extends SpriteAnimationComponent
   double velocityY = 0.0; // Velocità verticale
   final double gravity = 500.0; // Forza di gravità
   double jump = -300.0; // Forza del salto
-  int ground = 425; // Livello del terreno
+  int ground = 550; // Livello del terreno
   bool isOnGround = false; // Stato di contatto con il terreno
 
   @override

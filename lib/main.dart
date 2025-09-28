@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';

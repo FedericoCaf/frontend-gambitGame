@@ -28,6 +28,7 @@ class _GamebasecontrolsState extends State<Gamebasecontrols> {
   void _stopMoving() {
     _timer?.cancel();
     _timer = null;
+    widget.onDirectionPressed('stop');
   }
 
   Widget _buildButton(IconData icon, String direction) {

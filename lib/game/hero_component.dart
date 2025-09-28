@@ -3,31 +3,60 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:frontend/game/gambit_game.dart';
 
-class HeroComponent extends SpriteAnimationComponent
+
+enum HeroState { idle, run, jump }
+
+class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     with DragCallbacks, CollisionCallbacks, HasGameReference<GambitGame>{
+
+  late SpriteAnimation idleAnimation;
+  late SpriteAnimation runAnimation;
+  late SpriteAnimation jumpAnimation;
 
   Vector2? _previousPosition;
 
   HeroComponent({
-    SpriteAnimation? super.animation,
     super.position,
     Vector2? size,
   }) : super(
     size: size ?? Vector2.all(96),
     anchor: Anchor.center,
+    current: HeroState.idle
   );
 
   @override
   Future<void> onLoad() async {
     
-    animation = await game.loadSpriteAnimation(
-    'hero_idle.png',
+    idleAnimation = await game.loadSpriteAnimation(
+    'hero/hero_idle.png',
     SpriteAnimationData.sequenced(
         amount: 7,
         stepTime: 0.2,
         textureSize: Vector2(96, 84),
       loop: true,
     ));
+
+    runAnimation = await game.loadSpriteAnimation(
+    'hero/hero_run.png', SpriteAnimationData.sequenced(
+        amount: 8,
+        stepTime: 0.2,
+        textureSize: Vector2(96, 84),
+        loop: true,
+    ));
+
+    jumpAnimation = await game.loadSpriteAnimation(
+    'hero/hero_jump.png', SpriteAnimationData.sequenced(
+        amount: 5,
+        stepTime: 0.2,
+        textureSize: Vector2(96, 84),
+        loop: false,
+    ));
+
+    animations = {
+      HeroState.idle: idleAnimation,
+      HeroState.run: runAnimation,
+      HeroState.jump: jumpAnimation,
+    };
     
     position = game.size / 2;
 
@@ -61,6 +90,28 @@ class HeroComponent extends SpriteAnimationComponent
   void move(Vector2 delta) {
     _previousPosition = position.clone();
     position.add(delta);
+    if (delta.x != 0) {
+      isMoving = true;
+      if (isOnGround) {
+        current = HeroState.run;
+      }
+      // Flipo l'animazione in base alla direzione
+      if (delta.x > 0) {
+        scale = Vector2(1, 1); // Direzione destra
+      } else {
+        scale = Vector2(-1, 1); // Direzione sinistra
+      }
+    } else {
+      isMoving = false;
+      current = HeroState.idle;
+    }
+  }
+
+  void stop() {
+    isMoving = false;
+    if (isOnGround) {
+      current = HeroState.idle;
+    }
   }
 
   @override
@@ -76,6 +127,7 @@ class HeroComponent extends SpriteAnimationComponent
 
   @override
   void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
   }
 
   // ================== Gravity Simulation ==================
@@ -85,6 +137,7 @@ class HeroComponent extends SpriteAnimationComponent
   double jump = -300.0; // Forza del salto
   int ground = 550; // Livello del terreno
   bool isOnGround = false; // Stato di contatto con il terreno
+  bool isMoving = false; // Stato di movimento orizzontale
 
   @override
   void update(double dt) {
@@ -101,15 +154,24 @@ class HeroComponent extends SpriteAnimationComponent
       y = ground - height;
       velocityY = 0;
       isOnGround = true;
+      if (current == HeroState.jump) {
+        current = isMoving ? HeroState.run : HeroState.idle;
+      }
     } else {
       isOnGround = false;
+    }
+
+    // forza idle se non ti muovi e sei a terra
+    if (!isMoving && isOnGround && current != HeroState.jump) {
+      current = HeroState.idle;
     }
 
   }
 
   void jumpAction() {
+    current = HeroState.jump;
     if (isOnGround) {
-      velocityY = jump as double;
+      velocityY = jump;
       isOnGround = false;
     }
   }

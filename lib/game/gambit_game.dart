@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
@@ -104,7 +102,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
 
     switch (direction) {
       case 'up':
-        delta = Vector2(0, -step);
+        delta = Vector2.zero();
         hero.jumpAction();
         break;
       case 'down':
@@ -118,6 +116,9 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
       case 'right':
         delta = Vector2(step, 0);
         hero.move(delta);
+        break;
+      case 'stop':
+        hero.stop();
         break;
       default:
         delta = Vector2.zero();

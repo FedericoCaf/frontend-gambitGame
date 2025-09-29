@@ -4,7 +4,7 @@ import 'package:flame/events.dart';
 import 'package:frontend/game/gambit_game.dart';
 
 
-enum HeroState { idle, run, jump }
+enum HeroState { idle, run, jump, attack }
 
 class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     with DragCallbacks, CollisionCallbacks, HasGameReference<GambitGame>{
@@ -12,6 +12,7 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
   late SpriteAnimation idleAnimation;
   late SpriteAnimation runAnimation;
   late SpriteAnimation jumpAnimation;
+  late SpriteAnimation attackAnimation;
 
   Vector2? _previousPosition;
 
@@ -52,10 +53,19 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
         loop: false,
     ));
 
+    attackAnimation = await game.loadSpriteAnimation(
+    'hero/hero_attack.png', SpriteAnimationData.sequenced(
+        amount: 6,
+        stepTime: 0.1,
+        textureSize: Vector2(96, 84),
+        loop: false,
+    ));
+
     animations = {
       HeroState.idle: idleAnimation,
       HeroState.run: runAnimation,
       HeroState.jump: jumpAnimation,
+      HeroState.attack: attackAnimation
     };
     
     position = game.size / 2;
@@ -107,6 +117,14 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     }
   }
 
+  void attack() {
+    if (!isAttacking) {
+      current = HeroState.attack;
+      isAttacking = true;
+      attackTimer = 0.0;
+    }
+  }
+
   void stop() {
     isMoving = false;
     if (isOnGround) {
@@ -138,10 +156,30 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
   int ground = 550; // Livello del terreno
   bool isOnGround = false; // Stato di contatto con il terreno
   bool isMoving = false; // Stato di movimento orizzontale
+  double attackDuration = 0.6; // Durata dell'attacco in secondi
+  double attackTimer = 0.0; // Timer per l'attacco
+  bool isAttacking = false; // Stato di attacco
+
+  void jumpAction() {
+    current = HeroState.jump;
+    if (isOnGround) {
+      velocityY = jump;
+      isOnGround = false;
+    }
+  }
 
   @override
   void update(double dt) {
     super.update(dt);
+
+    if (isAttacking) {
+      attackTimer += dt;
+      if (attackTimer >= attackDuration) {
+        print('Fine Attacco!');
+        isAttacking = false;
+        current = HeroState.idle;
+      }
+    }
 
     // Calcolo l'accelerazione gravitazionale
     velocityY += gravity * dt;
@@ -162,18 +200,12 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     }
 
     // forza idle se non ti muovi e sei a terra
-    if (!isMoving && isOnGround && current != HeroState.jump) {
+    if (!isMoving && isOnGround
+        && current != HeroState.jump
+        && !isAttacking) {
       current = HeroState.idle;
     }
 
-  }
-
-  void jumpAction() {
-    current = HeroState.jump;
-    if (isOnGround) {
-      velocityY = jump;
-      isOnGround = false;
-    }
   }
 
 }

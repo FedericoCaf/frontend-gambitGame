@@ -2,6 +2,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:frontend/game/ABXY-Control.dart';
 import 'package:frontend/game/GameBaseControls.dart';
 import 'package:frontend/game/GameInitLoadingScreen.dart';
 import 'package:frontend/game/gambit_game.dart';
@@ -30,7 +31,7 @@ void main() {
     game: GambitGame(
       world: MyWorld(),
     ),
-    initialActiveOverlays: const ['PauseMenu', 'Controls'],
+    initialActiveOverlays: const ['PauseMenu', 'Controls', 'ActionControls'],
     loadingBuilder: (BuildContext ctx) {
       return const Gameinitloadingscreen();
     },
@@ -50,6 +51,8 @@ void main() {
       },
       'Controls': (context, game) => Gamebasecontrols
         (onDirectionPressed: (dir) => (game as GambitGame).onDirectionPressed(dir)),
+      'ActionControls': (context, game) => GameABXYControls
+        (onActionPressed: (action) => (game as GambitGame).onActionPressed(action)),
     }
   ));
 }

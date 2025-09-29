@@ -125,6 +125,17 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
         hero.move(delta);
     }
   }
+
+  void onActionPressed(String action) {
+    switch (action) {
+      case 'A':
+        hero.attack();
+        break;
+      default:
+        // Gestisci altre azioni se necessario
+        break;
+    }
+  }
 }
 
 

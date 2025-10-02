@@ -1,59 +1,59 @@
-
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/game/ABXY-Control.dart';
-import 'package:frontend/game/GameBaseControls.dart';
-import 'package:frontend/game/GameInitLoadingScreen.dart';
-import 'package:frontend/game/gambit_game.dart';
+import 'package:gambit_game/widgets/abxy_control.dart';
+import 'package:gambit_game/widgets/game_base_controls.dart';
+import 'package:gambit_game/screens/game_init_loading_screen.dart';
+import 'package:gambit_game/core/gambit_game.dart';
+import 'package:gambit_game/utils/logger.dart';
 
-import 'package:logger/logger.dart';
-
-var logger = Logger();
-
+/// Main world component for the game
 class MyWorld extends World {
   @override
   Future<void> onLoad() async {
-    // Ogni caricamento specifico del mondo può essere fatto qui
-    // Possiamo aggiungere componenti, impostare proprietà, ecc.
-    // Potremmo spostare qui la logica di caricamento del gioco se necessario
+    // World-specific loading logic can be added here
+    // Components, properties, etc. can be initialized
+    gameLogger.gameEvent('World loaded');
   }
 }
 
 void main() {
+  // Initialize logger
+  gameLogger.gameEvent('Game starting');
 
-  //Inizializzazione Logger
-  logger.i("Esempio di messaggio informativo");
-  logger.w("Esempio di messaggio di avviso");
-  logger.e("Esempio di messaggio di errore");
-
-  runApp(GameWidget(
-    game: GambitGame(
-      world: MyWorld(),
-    ),
-    initialActiveOverlays: const ['PauseMenu', 'Controls', 'ActionControls'],
-    loadingBuilder: (BuildContext ctx) {
-      return const Gameinitloadingscreen();
-    },
-    overlayBuilderMap: {
-      'PauseMenu': (context, game) {
-        return Align(
-          alignment: Alignment.topRight - const Alignment(0.1, -0.2),
-          child: Container(
-            color: Colors.transparent,
-            child: const Image(
+  runApp(
+    GameWidget(
+      game: GambitGame(
+        world: MyWorld(),
+      ),
+      initialActiveOverlays: const ['PauseMenu', 'Controls', 'ActionControls'],
+      loadingBuilder: (BuildContext ctx) {
+        return const GameInitLoadingScreen();
+      },
+      overlayBuilderMap: {
+        'PauseMenu': (context, game) {
+          return Align(
+            alignment: Alignment.topRight - const Alignment(0.1, -0.2),
+            child: Container(
+              color: Colors.transparent,
+              child: const Image(
                 image: AssetImage('assets/images/pause.png'),
                 width: 35,
-                height: 35
+                height: 35,
+              ),
             ),
-          )
-        );
+          );
+        },
+        'Controls': (context, game) => GameBaseControls(
+              onDirectionPressed: (dir) =>
+                  (game as GambitGame).onDirectionPressed(dir),
+            ),
+        'ActionControls': (context, game) => GameAbxyControls(
+              onActionPressed: (action) =>
+                  (game as GambitGame).onActionPressed(action),
+            ),
       },
-      'Controls': (context, game) => Gamebasecontrols
-        (onDirectionPressed: (dir) => (game as GambitGame).onDirectionPressed(dir)),
-      'ActionControls': (context, game) => GameABXYControls
-        (onActionPressed: (action) => (game as GambitGame).onActionPressed(action)),
-    }
-  ));
+    ),
+  );
 }
 

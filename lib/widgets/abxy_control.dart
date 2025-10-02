@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:gambit_game/utils/logger.dart';
 
-class GameABXYControls extends StatefulWidget {
-
+/// ABXY action button controls widget
+class GameAbxyControls extends StatefulWidget {
   final void Function(String action) onActionPressed;
 
-  const GameABXYControls({super.key, required this.onActionPressed});
+  const GameAbxyControls({super.key, required this.onActionPressed});
 
   @override
-  State<GameABXYControls> createState() => _GameABXYControlsState();
-
+  State<GameAbxyControls> createState() => _GameAbxyControlsState();
 }
 
-class _GameABXYControlsState extends State<GameABXYControls> {
-
+class _GameAbxyControlsState extends State<GameAbxyControls> {
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -37,9 +36,7 @@ class _GameABXYControlsState extends State<GameABXYControls> {
   }
 
   void _startAction(String action) {
-    print('Hai premuto: $action');
+    gameLogger.debug('Action button pressed: $action');
     widget.onActionPressed(action);
   }
-
-
 }

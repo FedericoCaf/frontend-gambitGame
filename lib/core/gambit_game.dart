@@ -3,11 +3,14 @@ import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/widgets.dart';
-import 'package:frontend/game/orc_component.dart';
-import 'package:frontend/main.dart';
-import 'package:frontend/utils/colors.dart';
-import 'hero_component.dart';
+import 'package:gambit_game/components/orc_component.dart';
+import 'package:gambit_game/components/hero_component.dart';
+import 'package:gambit_game/main.dart';
+import 'package:gambit_game/utils/colors.dart';
+import 'package:gambit_game/utils/logger.dart';
+import 'package:gambit_game/config/game_constants.dart';
 
+/// Main game class for Gambit Game
 class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
   late HeroComponent hero;
   late OrcComponent orc;
@@ -19,36 +22,38 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
   Color backgroundColor() => AppColors.beigeLight;
 
   @override
-  bool pauseWhenBackgrounded = true;
+  bool pauseWhenBackgrounded = GameSettings.pauseWhenBackgrounded;
 
   @override
   Future<void> onLoad() async {
-
-    //Fake Loading
-    await Future.delayed(const Duration(seconds: 3));
-
-    // final screenHitbox = ScreenHitbox();
-    // screenHitbox.debugMode = true;
-    // add(screenHitbox);
+    // Fake loading for splash screen
+    await Future.delayed(
+      const Duration(seconds: GameSettings.loadingDuration),
+    );
+    gameLogger.gameEvent('Game loading');
 
     background = await loadSprite('background.jpg');
 
-    // Sprite is now not required (default sprite: viking)
+    // Initialize hero with configured size
     hero = HeroComponent(
-      size: Vector2(96 * 3,84 * 3),
+      size: Vector2(
+        SpriteConstants.heroTextureWidth * SpriteConstants.heroScale,
+        SpriteConstants.heroTextureHeight * SpriteConstants.heroScale,
+      ),
     );
-
     add(hero);
+    gameLogger.gameEvent('Hero initialized');
 
-    // Sprite is now not required (default enemy sprite: orc)
+    // Initialize enemy
     orc = OrcComponent(
-      size: Vector2.all(128),
+      size: Vector2.all(SpriteConstants.orcSize),
       position: Vector2(650, 300),
     );
     add(orc);
-    
+    gameLogger.gameEvent('Enemy initialized');
+
     // Camera settings
-    camera.follow(hero, maxSpeed: 250);
+    camera.follow(hero, maxSpeed: MovementConstants.cameraMaxSpeed);
   }
 
   @override
@@ -96,14 +101,16 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     Flame.assets.clearCache();
   }
 
+  /// Handles directional input from controls
   void onDirectionPressed(String direction) {
-    const step = 7.0;
+    const step = MovementConstants.stepSize;
     Vector2 delta;
 
     switch (direction) {
       case 'up':
         delta = Vector2.zero();
         hero.jumpAction();
+        gameLogger.playerAction('Jump');
         break;
       case 'down':
         delta = Vector2(0, step);
@@ -126,13 +133,15 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     }
   }
 
+  /// Handles action button input (A, B, X, Y)
   void onActionPressed(String action) {
     switch (action) {
       case 'A':
         hero.attack();
+        gameLogger.playerAction('Attack');
         break;
       default:
-        // Gestisci altre azioni se necessario
+        // Handle other actions if needed
         break;
     }
   }

@@ -2,16 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-class Gamebasecontrols extends StatefulWidget {
+/// Directional controls widget for hero movement
+class GameBaseControls extends StatefulWidget {
   final void Function(String direction) onDirectionPressed;
 
-  const Gamebasecontrols({super.key, required this.onDirectionPressed});
+  const GameBaseControls({super.key, required this.onDirectionPressed});
 
   @override
-  State<Gamebasecontrols> createState() => _GamebasecontrolsState();
+  State<GameBaseControls> createState() => _GameBaseControlsState();
 }
 
-class _GamebasecontrolsState extends State<Gamebasecontrols> {
+class _GameBaseControlsState extends State<GameBaseControls> {
   Timer? _timer;
 
   void _startMoving(String direction) {

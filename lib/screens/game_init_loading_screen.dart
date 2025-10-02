@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class Gameinitloadingscreen extends StatelessWidget {
-
-  const Gameinitloadingscreen({super.key});
+/// Loading screen shown during game initialization
+class GameInitLoadingScreen extends StatelessWidget {
+  const GameInitLoadingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,18 +13,14 @@ class Gameinitloadingscreen extends StatelessWidget {
           CircularProgressIndicator(),
           SizedBox(height: 20),
           Text(
-            'Caricamento in corso...',
+            'Loading game...',
             style: TextStyle(
               fontSize: 18,
               color: Colors.black87,
             ),
           ),
         ],
-      )
+      ),
     );
   }
-
-
-
-
 }

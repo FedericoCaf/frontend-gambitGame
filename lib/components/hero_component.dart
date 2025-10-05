@@ -10,7 +10,7 @@ enum HeroState { idle, run, jump, attack }
 
 /// Main hero component with animations and physics
 class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
-    with DragCallbacks, CollisionCallbacks, HasGameReference<GambitGame> {
+    with CollisionCallbacks, HasGameReference<GambitGame> {
   late SpriteAnimation idleAnimation;
   late SpriteAnimation runAnimation;
   late SpriteAnimation jumpAnimation;
@@ -19,7 +19,7 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
   Vector2? _previousPosition;
 
   HeroComponent({
-    super.position,
+    Vector2? position,
     Vector2? size,
   }) : super(
           size: size ?? Vector2.all(SpriteConstants.heroTextureWidth),
@@ -29,7 +29,6 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
 
   @override
   Future<void> onLoad() async {
-
     priority = 100;
 
     final textureSize = Vector2(
@@ -106,12 +105,6 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
   void onGameResize(Vector2 canvasSize) {
     super.onGameResize(canvasSize);
     position = canvasSize / 2;
-  }
-
-  @override
-  void onDragUpdate(DragUpdateEvent event) {
-    super.onDragUpdate(event);
-    position += event.canvasDelta;
   }
 
   /// Move the hero in a given direction

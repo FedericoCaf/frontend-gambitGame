@@ -44,6 +44,9 @@ class AnimationConstants {
 
   /// Attack duration in seconds
   static const double attackDuration = 0.35;
+
+  /// Hurt animation step time
+  static const double hurtStepTime = 0.2;
 }
 
 /// Sprite size constants
@@ -54,14 +57,21 @@ class SpriteConstants {
   static const double heroTextureWidth = 96.0;
   static const double heroTextureHeight = 84.0;
 
+  /// Enemy sprite texture size
+  static const double goblinTextureWidth = 116.0;
+  static const double goblinTextureHeight = 78.0;
+
   /// Hero display scale factor
   static const double heroScale = 3.0;
 
-  /// Orc sprite size
-  static const double orcSize = 128.0;
+  /// Enemy display scale factor
+  static const double goblinScale = 2.0;
 
   /// Hero hitbox relative size
   static const double heroHitboxSize = 0.5;
+
+  /// Enemy hitbox relative size
+  static const double goblinHitboxSize = 0.5;
 }
 
 /// Game settings

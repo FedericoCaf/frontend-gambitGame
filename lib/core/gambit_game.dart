@@ -49,7 +49,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     gameLogger.gameEvent('Game loading');
 
     // Load and add background tiles
-    final backgroundSprite = await loadSprite('Sky.png');
+    final backgroundSprite = await loadSprite('background/Sky.png');
     final background = SpriteComponent()
       ..sprite = backgroundSprite
       ..size = size
@@ -77,20 +77,25 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
         SpriteConstants.heroTextureWidth * SpriteConstants.heroScale,
         SpriteConstants.heroTextureHeight * SpriteConstants.heroScale,
       ),
+        position: Vector2(size.x / 2, size.y  / 2)
     );
     world.add(hero);
     gameLogger.gameEvent('Hero initialized');
 
     // Initialize enemy
     orc = OrcComponent(
-      size: Vector2.all(SpriteConstants.orcSize),
-      position: Vector2(650, 300),
+      size: Vector2(
+        SpriteConstants.goblinTextureWidth * SpriteConstants.goblinScale,
+        SpriteConstants.goblinTextureHeight * SpriteConstants.goblinScale,
+      ),
+      position: Vector2(0, 300),
     );
     world.add(orc);
     gameLogger.gameEvent('Enemy initialized');
 
     // Camera settings
     camera.follow(hero, maxSpeed: MovementConstants.cameraMaxSpeed);
+    camera.viewfinder.position = Vector2(size.x / 2, size.y  / 2);
   }
 
   @override

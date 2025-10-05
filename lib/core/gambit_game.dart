@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
+import 'package:flame/sprite.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gambit_game/components/orc_component.dart';
 import 'package:gambit_game/components/hero_component.dart';
@@ -9,12 +10,27 @@ import 'package:gambit_game/main.dart';
 import 'package:gambit_game/utils/colors.dart';
 import 'package:gambit_game/utils/logger.dart';
 import 'package:gambit_game/config/game_constants.dart';
+import 'package:gambit_game/components/TileMapComponent.dart';
 
 /// Main game class for Gambit Game
 class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
+  // -1 = empty space (transparent)
+  final List<List<int>> levelMap = [
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12],
+    [12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12],
+  ];
+
   late HeroComponent hero;
   late OrcComponent orc;
-  late Sprite background;
+  late SpriteSheet tileSpriteSheet;
 
   GambitGame({required MyWorld super.world, super.camera});
 
@@ -32,7 +48,28 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     );
     gameLogger.gameEvent('Game loading');
 
-    background = await loadSprite('background.jpg');
+    // Load and add background tiles
+    final backgroundSprite = await loadSprite('Sky.png');
+    final background = SpriteComponent()
+      ..sprite = backgroundSprite
+      ..size = size
+      ..priority = -100;
+
+    world.add(background);
+
+    final tilesImage = await images.load('tiles/Tileset_Outside.png');
+
+    // Load tile map component
+    tileSpriteSheet = SpriteSheet(image: tilesImage, srcSize: Vector2(32, 32));
+
+    final tileMap = TileMapComponent(
+      spriteSheet: tileSpriteSheet,
+      tileData: levelMap,
+      tileSize: 32 * SpriteConstants.heroScale,
+      position: Vector2(0, -280)
+    );
+
+    world.add(tileMap);
 
     // Initialize hero with configured size
     hero = HeroComponent(
@@ -41,7 +78,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
         SpriteConstants.heroTextureHeight * SpriteConstants.heroScale,
       ),
     );
-    add(hero);
+    world.add(hero);
     gameLogger.gameEvent('Hero initialized');
 
     // Initialize enemy
@@ -49,7 +86,7 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
       size: Vector2.all(SpriteConstants.orcSize),
       position: Vector2(650, 300),
     );
-    add(orc);
+    world.add(orc);
     gameLogger.gameEvent('Enemy initialized');
 
     // Camera settings
@@ -63,33 +100,6 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
 
   @override
   void render(Canvas canvas) {
-    // Dimensione del canvas
-    final gameSize = size;
-    
-    // Dimensioni dell'immagine di sfondo
-    final bgSize = background.srcSize;
-    
-    // Calcola il fattore di scala per coprire l'intero canvas
-    final scaleX = gameSize.x / bgSize.x;
-    final scaleY = gameSize.y / bgSize.y;
-    
-    // Usa il fattore di scala maggiore per evitare spazi vuoti
-    final scale = scaleX > scaleY ? scaleX : scaleY;
-    
-    // Calcola la nuova dimensione dell'immagine di sfondo
-    final sizeToRender = Vector2(bgSize.x * scale, bgSize.y * scale);
-
-    // Calcola la posizione per centrare l'immagine di sfondo
-    final positionX = (gameSize.x - sizeToRender.x) / 2;
-    final positionY = (gameSize.y - sizeToRender.y) / 2;
-    
-    background.render(
-      canvas,
-      size: sizeToRender,
-      position: Vector2(positionX, positionY),
-    );
-
-
     super.render(canvas);
   }
 
@@ -146,5 +156,3 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
     }
   }
 }
-
-

@@ -12,7 +12,7 @@ class PhysicsConstants {
   static const double jumpForce = -300.0;
 
   /// Ground level Y position
-  static const double groundLevel = 550.0;
+  static const double groundLevel = 590.0;
 }
 
 /// Movement constants

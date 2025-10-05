@@ -29,6 +29,9 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
 
   @override
   Future<void> onLoad() async {
+
+    priority = 100;
+
     final textureSize = Vector2(
       SpriteConstants.heroTextureWidth,
       SpriteConstants.heroTextureHeight,

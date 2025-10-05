@@ -19,6 +19,7 @@ class OrcComponent extends SpriteComponent with CollisionCallbacks {
 
   @override
   FutureOr<void> onLoad() async {
+    priority = 100;
     sprite = sprite ?? await Sprite.load('orc.png');
     add(
       RectangleHitbox()..debugMode = GameSettings.debugHitboxes,

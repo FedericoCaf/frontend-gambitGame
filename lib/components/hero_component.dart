@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -15,6 +17,8 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
   late SpriteAnimation runAnimation;
   late SpriteAnimation jumpAnimation;
   late SpriteAnimation attackAnimation;
+
+  CircleHitbox? attackHitbox;
 
   Vector2? _previousPosition;
 
@@ -192,9 +196,30 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     // Handle attack duration
     if (isAttacking) {
       attackTimer += dt;
+
+      if (attackTimer > AnimationConstants.attackDuration / 2 && attackHitbox == null) {
+        attackHitbox = CircleHitbox.relative(
+          0.1,
+          parentSize: size,
+          position: Vector2(
+            200,
+            140,
+          ),
+          collisionType: CollisionType.active,
+        )..debugColor = GameSettings.debugHitboxes
+            ? const Color(0xFFFF0000)
+            : const Color(0xFFFFFFFF)
+        ..debugMode = GameSettings.debugHitboxes;
+
+        gameLogger.debug('Mid-attack');
+        // Mid-attack logic can be added here
+        add(attackHitbox!);
+      }
       if (attackTimer >= AnimationConstants.attackDuration) {
         gameLogger.debug('Attack finished');
         isAttacking = false;
+        attackHitbox!.removeFromParent();
+        attackHitbox = null;
         current = HeroState.idle;
       }
     }

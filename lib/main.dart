@@ -34,7 +34,7 @@ void main() {
       overlayBuilderMap: {
         'PauseMenu': (context, game) {
           return Align(
-            alignment: Alignment.topRight - const Alignment(0.1, -0.2),
+            alignment: Alignment.topRight - const Alignment(0.1, -0.15),
             child: Container(
               color: Colors.transparent,
               child: const Image(

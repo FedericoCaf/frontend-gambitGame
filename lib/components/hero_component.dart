@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:gambit_game/core/gambit_game.dart';
 import 'package:gambit_game/config/game_constants.dart';
+import 'package:gambit_game/services/hero_stats_service.dart';
 import 'package:gambit_game/utils/logger.dart';
 
 /// Enumeration of hero animation states
@@ -13,6 +14,9 @@ enum HeroState { idle, run, jump, attack }
 /// Main hero component with animations and physics
 class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     with CollisionCallbacks, HasGameReference<GambitGame> {
+
+  HeroStatsService statsService = HeroStatsService();
+
   late SpriteAnimation idleAnimation;
   late SpriteAnimation runAnimation;
   late SpriteAnimation jumpAnimation;
@@ -151,11 +155,17 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
+    gameLogger.debug('Hero collision detected with ${other.runtimeType}');
+    // On collision, if is attacking do nothing
+    if (isAttacking) {
+      return;
+    }
     // Handle collision by reverting to previous position
     if (_previousPosition != null) {
       position.setFrom(_previousPosition!);
     }
-    super.onCollision(intersectionPoints, other);
+    statsService.takeDamage(1);
   }
 
   @override

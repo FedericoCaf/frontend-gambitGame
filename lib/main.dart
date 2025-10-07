@@ -6,6 +6,7 @@ import 'package:gambit_game/widgets/game_base_controls.dart';
 import 'package:gambit_game/screens/game_init_loading_screen.dart';
 import 'package:gambit_game/core/gambit_game.dart';
 import 'package:gambit_game/utils/logger.dart';
+import 'package:gambit_game/widgets/lifepoints_menu.dart';
 
 /// Main world component for the game
 class MyWorld extends World {
@@ -26,7 +27,7 @@ void main() {
       game: GambitGame(
         world: MyWorld(),
       ),
-      initialActiveOverlays: const ['PauseMenu', 'Controls', 'ActionControls'],
+      initialActiveOverlays: const ['PauseMenu', 'Controls', 'ActionControls', 'LifepointsMenu'],
       loadingBuilder: (BuildContext ctx) {
         return const GameInitLoadingScreen();
       },
@@ -52,6 +53,7 @@ void main() {
               onActionPressed: (action) =>
                   (game as GambitGame).onActionPressed(action),
             ),
+        'LifepointsMenu': (context, game) => const LifepointsMenu()
       },
     ),
   );

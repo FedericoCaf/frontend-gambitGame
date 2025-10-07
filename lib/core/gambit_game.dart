@@ -42,6 +42,9 @@ class GambitGame extends FlameGame with PanDetector, HasCollisionDetection {
 
   @override
   Future<void> onLoad() async {
+
+    Flame.device.fullScreen();
+
     // Fake loading for splash screen
     await Future.delayed(
       const Duration(seconds: GameSettings.loadingDuration),

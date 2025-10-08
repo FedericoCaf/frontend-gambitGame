@@ -165,7 +165,13 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
     if (_previousPosition != null) {
       position.setFrom(_previousPosition!);
     }
-    statsService.takeDamage(1);
+    if (canTakeDamage) {
+      statsService.takeDamage(1);
+      canTakeDamage = false;
+      Future.delayed(const Duration(1), () {
+        canTakeDamage = true;
+      });
+    }
   }
 
   @override
@@ -189,6 +195,9 @@ class HeroComponent extends SpriteAnimationGroupComponent<HeroState>
 
   /// Attack state
   bool isAttacking = false;
+
+  /// Damage check to prevent rapid damage
+  bool canTakeDamage = true;
 
   /// Trigger jump action
   void jumpAction() {
